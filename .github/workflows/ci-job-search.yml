@@ -1,0 +1,70 @@
+name: CI — Job Search Service
+
+on:
+  push:
+    branches: [master, main, develop]
+    paths: ['services/job-search-service/**']
+  pull_request:
+    branches: [master, main]
+    paths: ['services/job-search-service/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/job-search-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Run tests
+        run: mvn test
+
+  docker:
+    needs: build
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/job-search-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build & Push Docker image
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:${{ github.sha }} .
+          docker tag ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:latest
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:latest
+
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_JOB_SEARCH }}
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/job-search-service:${{ github.sha }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_JOB_SEARCH }}

@@ -1,0 +1,70 @@
+name: CI — Notification Service
+
+on:
+  push:
+    branches: [master, main, develop]
+    paths: ['services/notification-service/**']
+  pull_request:
+    branches: [master, main]
+    paths: ['services/notification-service/**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/notification-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: services/notification-service/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: echo "No lint configured yet"
+
+  docker:
+    needs: build
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/notification-service
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build & Push Docker image
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:${{ github.sha }} .
+          docker tag ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:latest
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:latest
+
+  deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NOTIFICATION }}
+          images: ${{ secrets.ACR_LOGIN_SERVER }}/notification-service:${{ github.sha }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_NOTIFICATION }}
