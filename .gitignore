@@ -1,0 +1,49 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+.npm
+*.tgz
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Firebase credentials (never commit)
+*-firebase-adminsdk-*.json
+serviceAccountKey.json
+
+# Build
+build/
+out/
+
+# Docker
+docker-compose.override.yml
