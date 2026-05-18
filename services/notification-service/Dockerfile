@@ -1,1 +1,8 @@
-# placeholder — will be filled in Phase 3
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY src ./src
+USER node
+EXPOSE 8083
+CMD ["node", "src/index.js"]

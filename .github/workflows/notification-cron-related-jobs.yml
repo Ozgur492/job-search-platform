@@ -1,0 +1,26 @@
+name: Cron — Related Jobs
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 03:00 UTC
+  workflow_dispatch: {}   # Manual trigger
+
+jobs:
+  trigger-related-jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Related Jobs Cron
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${{ secrets.GATEWAY_URL }}/api/v1/notifications/cron/related-jobs" \
+            -H "X-Cron-Secret: ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+          
+          echo "Response code: $RESPONSE"
+          
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "ERROR: Cron endpoint returned $RESPONSE"
+            exit 1
+          fi
+          
+          echo "Related jobs cron triggered successfully"
