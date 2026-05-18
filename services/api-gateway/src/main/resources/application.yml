@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Job Posting Service routes
+        - id: job-posting-jobs
+          uri: ${JOB_POSTING_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/jobs/**,/api/v1/companies/**,/api/v1/job-alerts/**,/api/v1/users/**
+        
+        # Job Search Service routes
+        - id: job-search
+          uri: ${JOB_SEARCH_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/search/**
+        
+        # Notification Service routes
+        - id: notification
+          uri: ${NOTIFICATION_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/notifications/**
+        
+        # AI Agent Service routes
+        - id: ai-agent
+          uri: ${AI_AGENT_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/v1/agent/**
+
+        # Job Posting Service Swagger
+        - id: job-posting-docs
+          uri: ${JOB_POSTING_URL:http://localhost:8081}
+          predicates:
+            - Path=/docs/jobs/**
+          filters:
+            - StripPrefix=2
+
+        # Job Search Service Swagger
+        - id: job-search-docs
+          uri: ${JOB_SEARCH_URL:http://localhost:8082}
+          predicates:
+            - Path=/docs/search/**
+          filters:
+            - StripPrefix=2
+
+frontend:
+  origin: ${FRONTEND_ORIGIN:http://localhost:5173}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.jobsearch.gateway: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    com.jobsearch.gateway: INFO

@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: job-search-service
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+      ssl:
+        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED:false}
+
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://root:devpass@localhost:27017/jobsearch?authSource=admin}
+
+firebase:
+  credentials:
+    path: ${FIREBASE_CREDENTIALS_PATH:}
+    json: ${FIREBASE_CREDENTIALS_JSON:}
+
+job-posting-service:
+  url: ${JOB_POSTING_SERVICE_URL:http://localhost:8081}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.jobsearch: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+logging:
+  level:
+    com.jobsearch: INFO
