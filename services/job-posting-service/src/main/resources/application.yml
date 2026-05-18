@@ -1,0 +1,73 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: job-posting-service
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/jobsearch}
+    username: ${SPRING_DATASOURCE_USERNAME:jobsearch}
+    password: ${SPRING_DATASOURCE_PASSWORD:devpass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      password: ${SPRING_DATA_REDIS_PASSWORD:}
+      ssl:
+        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED:false}
+
+  cache:
+    type: redis
+
+firebase:
+  credentials:
+    path: ${FIREBASE_CREDENTIALS_PATH:}
+    json: ${FIREBASE_CREDENTIALS_JSON:}
+
+servicebus:
+  enabled: ${SERVICEBUS_ENABLED:false}
+  connection-string: ${SERVICEBUS_CONNECTION_STRING:}
+  queue:
+    new-jobs: ${SERVICEBUS_QUEUE_NEW_JOBS:new-job-postings}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.jobsearch: DEBUG
+    org.springframework.security: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    com.jobsearch: INFO
+    org.springframework.security: WARN
