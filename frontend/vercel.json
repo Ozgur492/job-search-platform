@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://jobsearch-gateway-2107.azurewebsites.net/api/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
