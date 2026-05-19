@@ -2,11 +2,12 @@ name: CI — AI Agent Service
 
 on:
   push:
-    branches: [master, main, develop]
+    branches: [master, main]
     paths: ['services/ai-agent-service/**']
   pull_request:
     branches: [master, main]
     paths: ['services/ai-agent-service/**']
+  workflow_dispatch:
 
 jobs:
   build:
@@ -56,12 +57,15 @@ jobs:
   deploy:
     needs: docker
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_AI_AGENT }}
           images: ${{ secrets.ACR_LOGIN_SERVER }}/ai-agent-service:${{ github.sha }}
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_AI_AGENT }}

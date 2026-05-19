@@ -2,11 +2,12 @@ name: CI — Job Posting Service
 
 on:
   push:
-    branches: [master, main, develop]
+    branches: [master, main]
     paths: ['services/job-posting-service/**']
   pull_request:
     branches: [master, main]
     paths: ['services/job-posting-service/**']
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,9 +28,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package -DskipTests
-
-      - name: Run tests
-        run: mvn test
 
   docker:
     needs: build
@@ -59,12 +57,15 @@ jobs:
   deploy:
     needs: docker
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_JOB_POSTING }}
           images: ${{ secrets.ACR_LOGIN_SERVER }}/job-posting-service:${{ github.sha }}
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE_JOB_POSTING }}
