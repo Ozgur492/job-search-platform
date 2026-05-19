@@ -8,6 +8,10 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
+import AdminJobsPage from './pages/AdminJobsPage';
+import AdminJobFormPage from './pages/AdminJobFormPage';
+import MyApplicationsPage from './pages/MyApplicationsPage';
+import MyAlertsPage from './pages/MyAlertsPage';
 
 export default function App() {
   return (
@@ -22,8 +26,14 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/admin/jobs" element={<AdminJobsPage />} />
+          <Route path="/admin/jobs/new" element={<AdminJobFormPage />} />
+          <Route path="/admin/jobs/:id/edit" element={<AdminJobFormPage />} />
+          <Route path="/me/applications" element={<MyApplicationsPage />} />
+          <Route path="/me/alerts" element={<MyAlertsPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
 }
+

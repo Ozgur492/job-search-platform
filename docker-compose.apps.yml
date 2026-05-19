@@ -1,0 +1,35 @@
+services:
+  job-posting:
+    image: jobsearch/job-posting:local
+    depends_on: [postgres, redis]
+    ports: ["8081:8081"]
+    env_file: ./services/job-posting-service/.env.local
+    restart: unless-stopped
+
+  job-search:
+    image: jobsearch/job-search:local
+    depends_on: [redis, mongo, job-posting]
+    ports: ["8082:8082"]
+    env_file: ./services/job-search-service/.env.local
+    restart: unless-stopped
+
+  notification:
+    image: jobsearch/notification:local
+    depends_on: [mongo, postgres]
+    ports: ["8083:8083"]
+    env_file: ./services/notification-service/.env.local
+    restart: unless-stopped
+
+  ai-agent:
+    image: jobsearch/ai-agent:local
+    depends_on: [api-gateway]
+    ports: ["8084:8084"]
+    env_file: ./services/ai-agent-service/.env.local
+    restart: unless-stopped
+
+  api-gateway:
+    image: jobsearch/api-gateway:local
+    depends_on: [job-posting, job-search, notification, ai-agent]
+    ports: ["8080:8080"]
+    env_file: ./services/api-gateway/.env.local
+    restart: unless-stopped

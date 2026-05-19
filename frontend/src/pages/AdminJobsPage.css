@@ -1,0 +1,133 @@
+.admin-page {
+  padding: 40px 24px;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.admin-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.admin-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* Table */
+.admin-table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table thead {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 14px 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr {
+  transition: var(--transition);
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.admin-job-title {
+  font-weight: 600;
+  color: var(--text-primary) !important;
+}
+
+.admin-job-title:hover {
+  color: var(--accent-hover) !important;
+}
+
+.admin-cell-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.status-inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+/* Actions */
+.admin-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+}

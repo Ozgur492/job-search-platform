@@ -1,0 +1,151 @@
+.alerts-page {
+  padding: 40px 24px;
+}
+
+.alerts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.alerts-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.alerts-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* Alert cards */
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alert-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.alert-card:hover {
+  transform: translateY(-2px);
+}
+
+.alert-info {
+  flex: 1;
+}
+
+.alert-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.keyword-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-hover);
+}
+
+.alert-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.alert-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.alert-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.btn-delete-alert {
+  color: var(--text-muted) !important;
+  flex-shrink: 0;
+}
+
+.btn-delete-alert:hover {
+  color: var(--danger) !important;
+  border-color: var(--danger) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Modal specific */
+.form-row-modal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.radio-group-modal {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.form-help {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-glass);
+}
+
+@media (max-width: 768px) {
+  .alerts-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .alert-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-row-modal {
+    grid-template-columns: 1fr;
+  }
+
+  .radio-group-modal {
+    flex-direction: column;
+  }
+}

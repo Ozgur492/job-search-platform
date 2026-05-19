@@ -47,6 +47,16 @@ export const deleteAlert = (id) => api.delete(`/job-alerts/${id}`);
 export const getMyNotifications = () => api.get('/notifications/me');
 export const markNotificationRead = (id) => api.post(`/notifications/me/${id}/read`);
 
+// Admin - Job management
+export const createJob = (data) => api.post('/jobs', data);
+export const updateJob = (id, data) => api.patch(`/jobs/${id}`, data);
+export const deleteJob = (id) => api.delete(`/jobs/${id}`);
+export const listJobs = (params) => api.get('/jobs', { params });
+
+// Companies
+export const createCompany = (data) => api.post('/companies', data);
+export const updateCompany = (id, data) => api.patch(`/companies/${id}`, data);
+
 // AI Agent
 export const chatWithAgent = (message, history) =>
   api.post('/agent/chat', { message, history });
