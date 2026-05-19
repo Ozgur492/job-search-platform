@@ -88,7 +88,7 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(value = "jobs", key = "#id")
+    //@Cacheable(value = "jobs", key = "#id")
     public JobResponse getById(UUID id) {
         Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Job not found: " + id));

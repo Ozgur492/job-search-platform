@@ -18,7 +18,7 @@
     <description>Job Posting Service for the Job Search Platform</description>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <firebase-admin.version>9.3.0</firebase-admin.version>
         <springdoc.version>2.6.0</springdoc.version>
     </properties>

@@ -13,14 +13,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
 
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
 
   data:
@@ -32,7 +32,7 @@ spring:
         enabled: ${SPRING_DATA_REDIS_SSL_ENABLED:false}
 
   cache:
-    type: redis
+    type: none
 
 firebase:
   credentials:

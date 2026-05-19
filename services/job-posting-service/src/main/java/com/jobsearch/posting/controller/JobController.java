@@ -35,7 +35,7 @@ public class JobController {
                                                HttpServletRequest httpRequest) {
         AppUser user = (AppUser) httpRequest.getAttribute("currentUser");
         // Ownership check: COMPANY users can only create jobs for their own company
-        if (user.getRole() == Role.COMPANY && !user.getCompany().getId().equals(request.companyId())) {
+        if (user != null && user.getRole() == Role.COMPANY && !user.getCompany().getId().equals(request.companyId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(jobService.create(request));

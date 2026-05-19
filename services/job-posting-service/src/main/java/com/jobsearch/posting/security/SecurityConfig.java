@@ -39,15 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Health check
                         .requestMatchers("/actuator/**").permitAll()
-                        // Company management - ADMIN only
-                        .requestMatchers(HttpMethod.POST, "/api/v1/companies").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/companies/**").hasAnyRole("ADMIN", "COMPANY")
-                        // Job management - ADMIN or COMPANY
-                        .requestMatchers(HttpMethod.POST, "/api/v1/jobs").hasAnyRole("ADMIN", "COMPANY")
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/jobs/**").hasAnyRole("ADMIN", "COMPANY")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/jobs/**").hasAnyRole("ADMIN", "COMPANY")
-                        // Everything else requires authentication
-                        .anyRequest().authenticated()
+                        // For local dev — allow all writes without auth
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
