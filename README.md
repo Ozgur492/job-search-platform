@@ -6,12 +6,12 @@ A kariyer.net-style job search platform built as a microservice system for **SE4
 
 | Component | URL |
 |---|---|
-| Frontend | _to be deployed (Vercel)_ |
-| API Gateway | _to be deployed (Azure)_ |
-| Job Posting API | _to be deployed (Azure)_ |
-| Job Search API | _to be deployed (Azure)_ |
-| Notification API | _to be deployed (Azure)_ |
-| AI Agent API | _to be deployed (Azure)_ |
+| Frontend | https://frontend-five-fawn-15.vercel.app |
+| API Gateway | https://jobsearch-gateway-2107.azurewebsites.net |
+| Job Posting API | https://jobsearch-posting-2107.azurewebsites.net |
+| Job Search API | https://jobsearch-search-2107.azurewebsites.net |
+| Notification API | https://jobsearch-notif-2107.azurewebsites.net |
+| AI Agent API | https://jobsearch-agent-2107.azurewebsites.net |
 
 **Demo video:** _to be recorded_
 
