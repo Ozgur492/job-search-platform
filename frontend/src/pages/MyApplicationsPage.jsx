@@ -24,7 +24,7 @@ export default function MyApplicationsPage() {
     setLoading(true);
     setError(null);
     getMyApplications()
-      .then((res) => setApplications(res.data || []))
+      .then((res) => setApplications(res.data?.data || []))
       .catch((err) => {
         console.error(err);
         setError('Başvurular yüklenirken hata oluştu.');
