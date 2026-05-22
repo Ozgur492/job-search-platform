@@ -94,6 +94,9 @@ public class JobController {
     @PostMapping("/{id}/applications")
     public ResponseEntity<ApplicationResponse> apply(@PathVariable UUID id, HttpServletRequest httpRequest) {
         AppUser user = (AppUser) httpRequest.getAttribute("currentUser");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(applicationService.apply(id, user));
     }
 

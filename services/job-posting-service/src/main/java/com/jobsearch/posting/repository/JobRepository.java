@@ -29,7 +29,8 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
             WHERE is_active = true
               AND id != :jobId
               AND city = :city
-            ORDER BY similarity(title, :title) DESC
+              AND (:title IS NULL OR 1=1)
+            ORDER BY posted_at DESC
             LIMIT :lim
             """, nativeQuery = true)
     List<Job> findRelated(
