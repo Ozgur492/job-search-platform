@@ -26,7 +26,7 @@ api.interceptors.response.use(
 );
 
 // Jobs
-export const searchJobs = (params) => api.get('/jobs', { params });
+export const searchJobs = (params) => api.get('/search/jobs', { params });
 export const getJob = (id) => api.get(`/jobs/${id}`);
 export const getRelatedJobs = (id, limit = 3) => api.get(`/jobs/${id}/related`, { params: { limit } });
 export const getApplicationCount = (id) => api.get(`/jobs/${id}/applications/count`);
