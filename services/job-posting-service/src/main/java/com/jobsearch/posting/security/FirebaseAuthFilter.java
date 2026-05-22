@@ -55,14 +55,32 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             String name = decodedToken.getName();
 
             // Upsert user
-            AppUser user = appUserRepository.findByFirebaseUid(uid).orElseGet(() -> {
+            AppUser user = appUserRepository.findByFirebaseUid(uid).orElse(null);
+            if (user == null) {
                 AppUser newUser = new AppUser();
                 newUser.setFirebaseUid(uid);
                 newUser.setEmail(email != null ? email : "");
                 newUser.setDisplayName(name);
                 newUser.setRole(Role.USER);
-                return appUserRepository.save(newUser);
-            });
+                user = appUserRepository.save(newUser);
+            } else {
+                boolean updated = false;
+                if (email != null && !email.equals(user.getEmail())) {
+                    user.setEmail(email);
+                    updated = true;
+                }
+                if (name != null && !name.equals(user.getDisplayName())) {
+                    user.setDisplayName(name);
+                    updated = true;
+                }
+                if (user.getRole() == null) {
+                    user.setRole(Role.USER);
+                    updated = true;
+                }
+                if (updated) {
+                    user = appUserRepository.save(user);
+                }
+            }
 
             request.setAttribute("currentUser", user);
 

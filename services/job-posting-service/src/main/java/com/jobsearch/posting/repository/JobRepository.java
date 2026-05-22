@@ -23,14 +23,12 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
             @Param("city") String city,
             @Param("country") String country,
             Pageable pageable);
-
     @Query(value = """
             SELECT * FROM jobs
             WHERE is_active = true
               AND id != :jobId
               AND city = :city
-              AND (:title IS NULL OR 1=1)
-            ORDER BY posted_at DESC
+            ORDER BY similarity(title, :title) DESC
             LIMIT :lim
             """, nativeQuery = true)
     List<Job> findRelated(
