@@ -13,7 +13,7 @@ A kariyer.net-style job search platform built as a microservice system for **SE4
 | Notification API | https://jobsearch-notif-2107.azurewebsites.net |
 | AI Agent API | https://jobsearch-agent-2107.azurewebsites.net |
 
-**Demo video:** _to be recorded_
+**Demo video:** [SE4458 Final Project Presentation Video](https://drive.google.com/file/d/1Ngp5BPiBGTcusXlw2FxkaDBR36Hl9qzw/view?usp=sharing)
 
 ## Team
 
