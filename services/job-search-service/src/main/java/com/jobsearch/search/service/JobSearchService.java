@@ -61,7 +61,7 @@ public class JobSearchService {
 
         // Fallback to Job Posting Service REST API
         log.info("Cache miss or insufficient results, falling back to Job Posting Service REST API");
-        return fetchFromJobPostingService(position, city, country, page, size);
+        return fetchFromJobPostingService(position, city, country, town, workPreference, employmentType, page, size);
     }
 
     public List<String> autocompletePositions(String query, int limit) {
@@ -201,37 +201,43 @@ public class JobSearchService {
 
     @SuppressWarnings("unchecked")
     private PageResponse<JobDto> fetchFromJobPostingService(String position, String city,
-                                                             String country, int page, int size) {
+                                                             String country, String town,
+                                                             String workPreference, String employmentType,
+                                                             int page, int size) {
         try {
+            // Fetch a large batch of jobs to enable full in-memory filtering, sorting, and pagination
             Map<String, Object> response = jobPostingWebClient.get()
-                    .uri(uriBuilder -> {
-                        var builder = uriBuilder.path("/api/v1/jobs")
-                                .queryParam("page", page)
-                                .queryParam("size", size);
-                        if (city != null && !city.isBlank()) builder.queryParam("city", city);
-                        if (country != null && !country.isBlank()) builder.queryParam("country", country);
-                        return builder.build();
-                    })
+                    .uri(uriBuilder -> uriBuilder.path("/api/v1/jobs")
+                            .queryParam("page", 0)
+                            .queryParam("size", 1000)
+                            .build())
                     .retrieve()
                     .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {})
                     .block();
 
-            if (response != null) {
-                List<JobDto> data = objectMapper.convertValue(
+            if (response != null && response.containsKey("data")) {
+                List<JobDto> allJobs = objectMapper.convertValue(
                         response.get("data"), new TypeReference<List<JobDto>>() {});
 
-                // Client-side filter by position if needed
-                if (position != null && !position.isBlank()) {
-                    data = data.stream()
-                            .filter(j -> j.title() != null && j.title().toLowerCase().contains(position.toLowerCase()))
-                            .collect(Collectors.toList());
-                }
+                List<JobDto> filtered = filterJobs(allJobs, position, city, country, town, workPreference, employmentType);
 
-                int total = response.containsKey("total") ? ((Number) response.get("total")).intValue() : data.size();
-                return new PageResponse<>(data, page, size, total);
+                // Sort by postedAt DESC
+                filtered.sort((a, b) -> {
+                    if (b.postedAt() == null && a.postedAt() == null) return 0;
+                    if (b.postedAt() == null) return -1;
+                    if (a.postedAt() == null) return 1;
+                    return b.postedAt().compareTo(a.postedAt());
+                });
+
+                long total = filtered.size();
+                int start = page * size;
+                int end = Math.min(start + size, filtered.size());
+                List<JobDto> pageData = start < filtered.size() ? filtered.subList(start, end) : List.of();
+
+                return new PageResponse<>(pageData, page, size, total);
             }
         } catch (Exception e) {
-            log.error("Failed to fetch jobs from Job Posting Service", e);
+            log.error("Failed to fetch and filter jobs from Job Posting Service", e);
         }
 
         return new PageResponse<>(List.of(), page, size, 0);
